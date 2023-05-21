@@ -1,0 +1,15 @@
+server:
+  port: 8081
+
+
+spring:
+  application:
+    name: Game-Store-Payments
+  datasource:
+    url: jdbc:mysql://localhost:3306/game_store
+    username: root
+    password: Dts033221982
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
