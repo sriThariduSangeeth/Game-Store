@@ -53,7 +53,7 @@
             }
         }
     }
-    session.setAttribute("cart-list",productList);
+    session.setAttribute("final-cart-list",productList);
     double total = new ProductsDao().getTotalCartPrice(productList);
 
 %>
@@ -100,6 +100,8 @@
                 }
             } else {
                 out.println("There is no proucts Selected for your cart");
+                out.println("");
+                out.println("");
             }
         %>
 

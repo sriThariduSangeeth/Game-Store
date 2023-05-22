@@ -34,7 +34,7 @@
         <div class="col-lg-7">
           <div class="col-12">
             <form action="save-order" method="post">
-              <input type="hidden" id="payType" name="payType" value="cash">
+              <input type="hidden" id="payType" name="payType" value="cashOnDelivary">
               <input type="hidden" id="total" name="total" value=<%= total %>>
               <button type="submit" class="btn btn-primary w-100">Sumbit</button>
             </form>

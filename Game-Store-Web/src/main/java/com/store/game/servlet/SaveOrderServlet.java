@@ -8,6 +8,7 @@ import com.store.game.models.User;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
@@ -38,13 +39,17 @@ public class SaveOrderServlet extends HttpServlet {
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         Date date = new Date();
         String paymentType = request.getParameter("payType");
-        List<Product> cartList = (List<Product>) request.getSession().getAttribute("cart-list");
+        List<Product> cartList = (List<Product>) request.getSession().getAttribute("final-cart-list");
         User currentUser = (User) request.getSession().getAttribute("loguser");
         String total = request.getParameter("total");
         Payment payment = new Payment(currentUser.getId(), UUID.randomUUID(), Double.parseDouble(total), dateFormat.format(date), paymentType, "Done", cartList.size(), cartList);
 
         try {
-            HttpPost httpPost = new HttpPost(new URI("http://localhost:8081/game/store/bank/payement"));
+            HttpPost httpPost = new HttpPost(new URI("http://localhost:8081"));
+            URI uri = new URIBuilder(httpPost.getURI())
+                    .setPath("/game/store/" + paymentType + "/payement")
+                    .build();
+            httpPost.setURI(uri);
             ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
             String json = ow.writeValueAsString(payment);
 
@@ -58,13 +63,14 @@ public class SaveOrderServlet extends HttpServlet {
                 HttpEntity ent = res.getEntity();
                 if (ent != null) {
                     System.out.println(EntityUtils.toString(ent));
-                    response.sendRedirect("store.jsp");
+                    request.getSession().removeAttribute("final-cart-list");
+                    request.getSession().removeAttribute("cart-list");
+                    response.sendRedirect("order.jsp");
                 }
 
             }
         } catch (URISyntaxException e) {
             e.printStackTrace();
-            response.sendRedirect("store.jsp");
         }
 
     }
