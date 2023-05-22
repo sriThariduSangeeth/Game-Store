@@ -2,6 +2,8 @@ package com.store.game.controller;
 
 import com.store.game.dto.PaymentRequest;
 import com.store.game.enums.PaymentsTypes;
+import com.store.game.service.payments.AllPayments;
+import com.store.game.service.payments.PaymentService;
 import com.store.game.service.payments.factory.PaymentFactory;
 import com.store.game.service.payments.factory.PaymentFactoryImpl;
 import lombok.extern.slf4j.Slf4j;
@@ -40,8 +42,8 @@ public class PaymentController {
         return paymentFactory.getPaymentService(type).reviewPayment(invoiceId);
     }
 
-//    @GetMapping("/game/store/payments")
-//    public ResponseEntity<?> reviewAllPayemnt(){
-//        return paymentFactory.getPaymentService(PaymentsTypes.all).reviewPayment(0);
-//    }
+    @GetMapping("/game/store/payments")
+    public ResponseEntity<?> reviewAllPayemnt(){
+        return paymentFactory.getPaymentService(PaymentsTypes.all).reviewInvoice(0);
+    }
 }

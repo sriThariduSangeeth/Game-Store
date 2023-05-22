@@ -7,6 +7,8 @@ public class Product {
     public String productName;
     public String productCategory;
     public double productPrice;
+    public String description;
+    public String imgName;
 
     public int getProductId() {
         return productId;
@@ -63,8 +65,5 @@ public class Product {
     public void setImgName(String imgName) {
         this.imgName = imgName;
     }
-
-    public String description;
-    public String imgName;
 
 }

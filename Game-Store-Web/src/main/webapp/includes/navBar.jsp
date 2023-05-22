@@ -28,7 +28,7 @@
         <a class="nav-link" href="store.jsp">Store</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="store.jsp">Orders</a>
+        <a class="nav-link" href="order.jsp">Orders</a>
       </li>
       <li class="nav-item">
         <a class="nav-link" href="#">Logout</a>
