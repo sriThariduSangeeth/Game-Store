@@ -23,33 +23,37 @@
 <%
     List<Cart> cart_list = (ArrayList<Cart>) session.getAttribute("cart-list");
     User user = (User) session.getAttribute("loguser");
-    if(user == null){
-     user = new User("minura@gmail.com", "Minura", "Hasantha", "0771122334","No:1, Temple Road, walpitamulla.","Veyangoda", "10033");
+    if (user == null) {
+        user = new User(425, "minura@gmail.com", "Minura", "Hasantha", "0771122334", "No:1, Temple Road, walpitamulla.", "Veyangoda", "10033");
+        session.setAttribute("loguser", user);
     }
     List<Product> productList = new ArrayList<>();
-    for (Cart cart : cart_list) {
-        try {
-            HttpGet req = new HttpGet("http://localhost:8081");
-            URI uri = new URIBuilder(req.getURI())
-                    .setPath("/game/store/"+cart.productId+"/product")
-                    .build();
-            req.setURI(uri);
-            try (CloseableHttpClient httpClient = HttpClients.createDefault();
-                 CloseableHttpResponse res = httpClient.execute(req)) {
-                HttpEntity entity = res.getEntity();
-                if (entity != null) {
-                    // return it as a String
-                    Product pro = new ProductsDao().getProduct(EntityUtils.toString(entity));
-                    pro.setQuantity(cart.getQuantity());
-                    productList.add(pro);
+    if (cart_list != null && !cart_list.isEmpty()) {
+        for (Cart cart : cart_list) {
+            try {
+                HttpGet req = new HttpGet("http://localhost:8081");
+                URI uri = new URIBuilder(req.getURI())
+                        .setPath("/game/store/" + cart.productId + "/product")
+                        .build();
+                req.setURI(uri);
+                try (CloseableHttpClient httpClient = HttpClients.createDefault();
+                     CloseableHttpResponse res = httpClient.execute(req)) {
+                    HttpEntity entity = res.getEntity();
+                    if (entity != null) {
+                        // return it as a String
+                        Product pro = new ProductsDao().getProduct(EntityUtils.toString(entity));
+                        pro.setQuantity(cart.getQuantity());
+                        productList.add(pro);
+                    }
                 }
+            } catch (URISyntaxException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
         }
     }
+    session.setAttribute("cart-list",productList);
     double total = new ProductsDao().getTotalCartPrice(productList);
 
 %>
@@ -80,15 +84,22 @@
                 int x = 1;
                 for (Product o : productList) {%>
         <tr>
-            <td><%=x++ %></td>
-            <td><%=o.getProductName() %></td>
-            <td><%=o.getProductCategory() %></td>
-            <td><%=o.getQuantity() %></td>
-            <td><%=o.getProductPrice() %></td>
+            <td><%=x++ %>
+            </td>
+            <td><%=o.getProductName() %>
+            </td>
+            <td><%=o.getProductCategory() %>
+            </td>
+            <td><%=o.getQuantity() %>
+            </td>
+            <td><%=o.getProductPrice() %>
+            </td>
             <td><a class="btn btn-sm btn-danger" href="#">Remove Item</a></td>
         </tr>
         <%
                 }
+            } else {
+                out.println("There is no proucts Selected for your cart");
             }
         %>
 
@@ -109,20 +120,28 @@
         </thead>
         <tbody>
         <tr>
-            <td><%=user.getFname() %></td>
-            <td><%=user.getLname() %></td>
-            <td><%=user.getMobile() %></td>
-            <td><%=user.getAddress() %></td>
-            <td><%=user.getEmail() %></td>
-            <td><%=user.getCity() %></td>
-            <td><%=user.getPostalCode() %></td>
+            <td><%=user.getFname() %>
+            </td>
+            <td><%=user.getLname() %>
+            </td>
+            <td><%=user.getMobile() %>
+            </td>
+            <td><%=user.getAddress() %>
+            </td>
+            <td><%=user.getEmail() %>
+            </td>
+            <td><%=user.getCity() %>
+            </td>
+            <td><%=user.getPostalCode() %>
+            </td>
         </tr>
 
 
         </tbody>
     </table>
 
-    <div class="card-header d-flex py-3"><h3>Total Price: $ <%= total %> </h3> </div>
+    <div class="card-header d-flex py-3"><h3>Total Price: $ <%= total %>
+    </h3></div>
     </br></br>
     <div class="card text-center">
         <div class="card-header">
@@ -145,19 +164,19 @@
             <div class="tab-content">
                 <div class="tab-pane active" id="card">
                     <h5 class="card-title">Card Payment</h5>
-                    <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+                    <%@include file="payments/card.jsp" %>
                 </div>
                 <div class="tab-pane" id="paypal">
                     <h5 class="card-title">PayPal Payment</h5>
-                    <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+                    <%@include file="payments/paypal.jsp" %>
                 </div>
                 <div class="tab-pane" id="bank">
                     <h5 class="card-title">Bak Deposit</h5>
-                    <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+                    <%@include file="payments/bank.jsp" %>
                 </div>
                 <div class="tab-pane" id="cash">
                     <h5 class="card-title">Cash On Delivery</h5>
-                    <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+                    <%@include file="payments/cash.jsp" %>
                 </div>
             </div>
 

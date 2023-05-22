@@ -13,7 +13,8 @@ public class User {
     private String PostalCode;
     private String Birthday;
 
-    public User( String email, String fname, String lname, String mobile, String address, String city, String postalCode) {
+    public User(int id, String email, String fname, String lname, String mobile, String address, String city, String postalCode) {
+        this.id = id;
         this.email = email;
         this.fname = fname;
         this.lname = lname;
@@ -21,7 +22,7 @@ public class User {
         this.mobile = mobile;
         this.address = address;
         this.city = city;
-        PostalCode = postalCode;
+        this.PostalCode = postalCode;
     }
 
     public int getId() {
